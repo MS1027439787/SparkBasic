@@ -1,4 +1,4 @@
-package word_count_scala
+
 
 //主构造方法
 class Person(var name: String, var age: Int) {

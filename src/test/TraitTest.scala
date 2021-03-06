@@ -1,4 +1,3 @@
-package word_count_scala
 
 trait TraitTest {
   def fuck(msg: String)

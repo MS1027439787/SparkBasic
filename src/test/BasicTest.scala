@@ -1,5 +1,3 @@
-package word_count_scala
-
 class BasicTest {
   var a: Int = 10;
   val b: Int = 20;
