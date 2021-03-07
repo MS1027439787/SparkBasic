@@ -25,6 +25,7 @@ object TopK {
     //执行topK
     dotopK1(data)
     dotopK2(data)
+    sc.stop()
   }
 
   /**
