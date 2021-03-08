@@ -20,7 +20,7 @@ object WordCount {
     sc.setLogLevel("warn")
     //3、读取数据文件Starry Starry Night
     //val data: RDD[String] = sc.textFile("/tmp/daoshu/tmp_wcl_dunj_sevn_zx.csv")
-    val data: RDD[String] = sc.textFile("E:\\Program\\SparkBasic\\src\\main\\resources\\words.txt")
+    val data: RDD[String] = sc.textFile("./src/main/resources/words.txt")
     //4、 切分每一行，获取所有单词，空格也会被算作一个字符
     val words: RDD[String] = data.flatMap(x => x.split(" "))
     //5、每个单词计为1

@@ -20,7 +20,7 @@ object TopK {
     sc.setLogLevel("warn")
     //3、读取数据文件Starry Starry Night
     //val data: RDD[String] = sc.textFile("/tmp/daoshu/tmp_wcl_dunj_sevn_zx.csv")
-    val data: RDD[String] = sc.textFile("E:\\Program\\SparkBasic\\src\\main\\resources\\words.txt")
+    val data: RDD[String] = sc.textFile("./src/main/resources/words.txt")
 
     //执行topK
     dotopK1(data)

@@ -10,7 +10,7 @@ object Median {
     val sparkConf: SparkConf = new SparkConf().setAppName("WordCount").setMaster("local")
     val sc = new SparkContext(sparkConf)
     //读取数据
-    val dataRDD = sc.textFile("E:\\Program\\SparkBasic\\src\\main\\resources\\data")
+    val dataRDD = sc.textFile("./src/main/resources/data")
       .flatMap(_.split(",")).map(_.toInt)
     dataRDD.foreach(println)
     //数据分区
