@@ -5,6 +5,7 @@ object Test{
   import java.io.PrintWriter
 
   def main(args:Array[String]):Unit={
+    import org.apache.spark.rdd.RDD
 
 
     //本地设置
@@ -15,8 +16,8 @@ object Test{
     //2、构建sparkContext对象,该对象非常重要，它是所有spark程序的执行入口
     // 它内部会构建 DAGScheduler和 TaskScheduler 对象
     val sc=new SparkContext(sparkConf)
-
-
+    //sc.textFiles(path) 能将path 里的所有文件内容读出，以文件中的每一行作为一条记录的方式
+    val data: RDD[String] = sc.textFile("./src/main/resources/words")
     val x = sc.parallelize(List("spark", "rdd", "example",  "sample", "example"), 3)
     val y1 = x.map(x => (x, 1))
     y1.collect
