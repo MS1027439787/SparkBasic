@@ -36,7 +36,7 @@ object Chapters8 {
     spark.newSession().sql("SELECT * FROM global_temp.people").show()
 
 
-    case class Person(name: String, age: Long)
+
     // Encoders are created for case classes
     val caseClassDS = Seq(Person("Andy", 32)).toDS()
     caseClassDS.show()
@@ -78,4 +78,6 @@ object Chapters8 {
     // Array(Map("name" -> "Justin", "age" -> 19))
 
   }
+
+  case class Person(name: String, age: Long)
 }
