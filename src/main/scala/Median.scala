@@ -1,10 +1,11 @@
-import org.apache.spark.{SparkConf, SparkContext}
+
 import org.apache.spark.rdd.RDD
 
 import scala.util.control.Breaks.{break, breakable}
 
 object Median {
   def main(args: Array[String]): Unit = {
+    import org.apache.spark.{SparkConf, SparkContext}
     //本地设置
     System.setProperty("hadoop.home.dir", "E:\\hadoop-3.0.1")
     val sparkConf: SparkConf = new SparkConf().setAppName("WordCount").setMaster("local")
