@@ -1,8 +1,9 @@
-import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
+package basicPractice
+
 import java.io.File
 
-import Chapters3.dirDel
+import org.apache.spark.rdd.RDD
+import org.apache.spark.{SparkConf, SparkContext}
 
 object WordCount {
   def main(args: Array[String]): Unit = {
@@ -20,23 +21,41 @@ object WordCount {
     sc.setLogLevel("warn")
     //3、读取数据文件Starry Starry Night
     //val data: RDD[String] = sc.textFile("/tmp/daoshu/tmp_wcl_dunj_sevn_zx.csv")
-    val data: RDD[String] = sc.textFile("./src/main/resources/words.txt")
+    val data: RDD[String] = sc.textFile("./src/main/resources/words")
     //4、 切分每一行，获取所有单词，空格也会被算作一个字符
     val words: RDD[String] = data.flatMap(x => x.split(" "))
     //5、每个单词计为1
-    val wordAndOne: RDD[(String, Int)] = words.map((_,1))
+    val wordAndOne: RDD[(String, Int)] = words.map((_, 1))
     //6、相同单词出现的1累加
-    val result: RDD[(String, Int)] = wordAndOne.reduceByKey(_+_)
+    val result: RDD[(String, Int)] = wordAndOne.reduceByKey(_ + _)
     //按照单词出现的次数降序排列 第二个参数默认是true表示升序，设置为false表示降序
     val sortedRDD: RDD[(String, Int)] = result.sortBy(x => x._2, false)
     dirDel(new File("result"))
     sortedRDD.saveAsTextFile("result")
     //7、收集数据打印
     val finalResult: Array[(String, Int)] = sortedRDD.collect()
-    for(i <- finalResult){
+    for (i <- finalResult) {
       println(i)
     }
     //8、关闭sc
     sc.stop()
+  }
+  def dirDel(path: File) {
+    if (!path.exists())
+      return
+    else if (path.isFile()) {
+      path.delete()
+      println(path + ":  文件被删除")
+      return
+    }
+
+    val file: Array[File] = path.listFiles()
+    for (d <- file) {
+      dirDel(d)
+    }
+
+    path.delete()
+    println(path + ":  目录被删除")
+
   }
 }

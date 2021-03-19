@@ -1,8 +1,15 @@
+package streaming
+
+import org.apache.spark.SparkConf
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+
 object SparkStreamingStockPrediction {
 
   import scala.io.Source
 
   def main(args: Array[String]): Unit = {
+//    val sparkConf: SparkConf = new SparkConf().setAppName("SparkStreaming").setMaster("local[2]")
+//    val ssc = new StreamingContext(sparkConf, Seconds(5))
     println("股票查询：")
     //查询sh601006,sh601007两只股票
     val sinaStockStream = Source.fromURL("http://hq.sinajs.cn/list=sh601006,sh601007", "gbk")
@@ -12,10 +19,12 @@ object SparkStreamingStockPrediction {
       println(SinaStock(line).toString)
     }
     sinaStockStream.close()
+//    ssc.start() // Start the computation
+//    ssc.awaitTermination() // Wait for the computation to terminate
   }
 
 
-  /** 其实这个类应该更通用一点，但目前一切以简单为主，后期在进行重构 **/
+  /** 其实这个类应该更通用一点，但目前一切以简单为主，后期在进行重构 * */
   class SinaStock {
     var code: String = "" //“sh601006”，股票代码
     var name: String = "" //”大秦铁路”，股票名字
@@ -61,7 +70,7 @@ object SparkStreamingStockPrediction {
     def this(stockInfo: String) {
       this()
       this.stockInfo = stockInfo
-      /** 根据新浪的数据接口解析数据 **/
+      /** 根据新浪的数据接口解析数据 * */
       val stockDetail = stockInfo.split(Array(' ', '_', '=', ',', '"'))
       if (stockDetail.length > 36) {
         this.code = stockDetail(3)
