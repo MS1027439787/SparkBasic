@@ -1,6 +1,6 @@
 package streaming
 
-object SparkStreaming {
+object UpdateStateByKey {
 
   import org.apache.spark.SparkConf
   import org.apache.spark.streaming._
@@ -29,9 +29,7 @@ object SparkStreaming {
     //状态更新函数
     print("历史状态数据打印：")
     val runningcounts = pairs.updateStateByKey(updateFunction)
-    //runningcounts.print()
-
-
+    runningcounts.print()
     ssc.start() // Start the computation
     ssc.awaitTermination() // Wait for the computation to terminate
 

@@ -18,6 +18,7 @@ object Test{
     val sc=new SparkContext(sparkConf)
     //sc.textFiles(path) 能将path 里的所有文件内容读出，以文件中的每一行作为一条记录的方式
     val data: RDD[String] = sc.textFile("./src/main/resources/words")
+    //parallelize方法从已有集合上创建RDD
     val x = sc.parallelize(List("spark", "rdd", "example",  "sample", "example"), 3)
     val y1 = x.map(x => (x, 1))
     y1.collect
