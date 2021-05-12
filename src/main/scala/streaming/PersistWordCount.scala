@@ -11,7 +11,7 @@ object PersistWordCount {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setMaster("local[2]").setAppName("WordCount")
     val sc = new SparkContext(conf)
-    val ssc = new StreamingContext(sc, Seconds(3))
+    val ssc = new StreamingContext(sc, Seconds(5))
 
     // 必须设置checkpoint
     val checkpointDir = "./data/checkpoint/"
@@ -23,41 +23,46 @@ object PersistWordCount {
 
     val pairs = words.map((_, 1))
 
-    // 统计全局的单词计数
-    // 使用updateStateByKey可以维护一份全局的
+    val result = pairs.reduceByKey(_+_)
 
-    def updateState(values: Seq[Int], state: Option[Int]) = {
-      var newValues = state.getOrElse(0)
-      for (value <- values) {
-        newValues += value
-      }
-      Some(newValues)
-    }
-
-    val wordCounts = pairs.updateStateByKey(updateState)
+    result.print()
 
 
-    // 写入mysql
-    wordCounts.foreachRDD(rdd => {
-      rdd.foreachPartition(wordCounts => {
-        import org.spark_project.jetty.client.ConnectionPool
-        //val conn = ConnectionPool.getConnection()
-
-        var wordCount: (String, Int) = null
-
-        while (wordCounts.hasNext) {
-          wordCount = wordCounts.next()
-
-          val sql = "insert into wordcount(word, count) " +
-            "values('" + wordCount._1 + "'," + wordCount._2 + ")";
-
-          //val stmt: Statement = conn.createStatement()
-
-          //stmt.executeUpdate(sql)
-        }
-
-      })
-    })
+//    // 统计全局的单词计数
+//    // 使用updateStateByKey可以维护一份全局的
+//
+//    def updateState(values: Seq[Int], state: Option[Int]) = {
+//      var newValues = state.getOrElse(0)
+//      for (value <- values) {
+//        newValues += value
+//      }
+//      Some(newValues)
+//    }
+//
+//    val wordCounts = pairs.updateStateByKey(updateState)
+//
+//
+//    // 写入mysql
+//    wordCounts.foreachRDD(rdd => {
+//      rdd.foreachPartition(wordCounts => {
+//        import org.spark_project.jetty.client.ConnectionPool
+//        //val conn = ConnectionPool.getConnection()
+//
+//        var wordCount: (String, Int) = null
+//
+//        while (wordCounts.hasNext) {
+//          wordCount = wordCounts.next()
+//
+//          val sql = "insert into wordcount(word, count) " +
+//            "values('" + wordCount._1 + "'," + wordCount._2 + ")";
+//
+//          //val stmt: Statement = conn.createStatement()
+//
+//          //stmt.executeUpdate(sql)
+//        }
+//
+//      })
+//    })
 
     //        wordCounts.print()
 
