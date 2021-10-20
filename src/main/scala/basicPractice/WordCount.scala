@@ -56,8 +56,8 @@ object WordCount {
     for (i <- wordAndOneResult) {
       println(i)
     }
-    //6、相同单词出现的1累加
-    val result: RDD[(String, Int)] = wordAndOne.reduceByKey((x,y) => x+y)
+    //6、相同单词出现的1累加,后面参数用于提高并行度
+    val result: RDD[(String, Int)] = wordAndOne.reduceByKey((x,y) => x+y,500)
     //等价写法
 //    val result: RDD[(String, Int)] = wordAndOne.reduceByKey(_ + _)
 
