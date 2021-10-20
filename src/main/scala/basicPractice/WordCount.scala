@@ -29,18 +29,22 @@ object WordCount {
     }
     //4、 切分每一行，获取所有单词，空格也会被算作一个字符
     val words: RDD[String] = data.flatMap(x => x.split(" "))
+    //等价写法
+    //val words: RDD[String] = data.flatMap(_.split(" "))
     val wordsResult:Array[String] = words.collect()
     for (i <- wordsResult) {
       println(i)
     }
-    //测试方法
-    val wordsmap: RDD[Array[String]] = data.map(x => x.split(" "))
-    val wordsmapResult:Array[Array[String]] = wordsmap.collect()
-    for (i <- wordsmapResult) {
-      println(i)
-    }
+//    //测试方法
+//    val wordsmap: RDD[Array[String]] = data.map(x => x.split(" "))
+//    val wordsmapResult:Array[Array[String]] = wordsmap.collect()
+//    for (i <- wordsmapResult) {
+//      println(i)
+//    }
     //5、每个单词计为1
-    val wordAndOne: RDD[(String, Int)] = words.map((_, 1))
+    val wordAndOne: RDD[(String, Int)] = words.map(x =>(x, 1))
+    //等价写法
+//    val wordAndOne: RDD[(String, Int)] = words.map((_, 1))
 
     //测试方法ª
 //    “flatMap “函数的一半功能和map函数一样，不过有个要求，传入的函数在处理完后返回值必须是List(应该是Seq)，如果结果不是List(Seq)，
@@ -53,9 +57,15 @@ object WordCount {
       println(i)
     }
     //6、相同单词出现的1累加
-    val result: RDD[(String, Int)] = wordAndOne.reduceByKey(_ + _)
+    val result: RDD[(String, Int)] = wordAndOne.reduceByKey((x,y) => x+y)
+    //等价写法
+//    val result: RDD[(String, Int)] = wordAndOne.reduceByKey(_ + _)
+
+
     //按照单词出现的次数降序排列 第二个参数默认是true表示升序，设置为false表示降序
     val sortedRDD: RDD[(String, Int)] = result.sortBy(x => x._2, false)
+    //等价写法
+//    val sortedRDD: RDD[(String, Int)] = result.sortBy(_._2, false)
     dirDel(new File("result"))
     sortedRDD.saveAsTextFile("result")
     //7、收集数据打印
